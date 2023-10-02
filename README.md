@@ -9,7 +9,7 @@ By 2016, Bellabeat had expanded its presence globally, establishing offices in v
 
 Recognizing that a thorough analysis of the consumer data at their disposal could uncover additional growth opportunities, Sršen has tasked the marketing analytics team with a specific mission. The team is to focus on a Bellabeat product and examine the usage data of smart devices to gain deeper insights into how people are currently utilizing these devices. With this information in hand, she seeks high-level recommendations on how these emerging trends can shape and enhance Bellabeat's marketing strategy moving forward.
 
-# The report will outline the insights gained through a structured data analysis process, which consists of the following stages:
+The report will outline the insights gained through a structured data analysis process, which consists of the following stages:
 
 # Inquiry (Ask): 
 We will begin by defining the problem to be addressed and explore how the insights derived from the analysis can inform strategic business decisions.
@@ -70,9 +70,179 @@ In order to address our primary question, which pertains to how current user beh
 
 Contained within the 'fitbit' directory is a subfolder titled 'Fitabase Data 4.12.16-5.12.16,' housing a collection of 18 CSV files, each of which contains tracker data, including minute-by-minute records of physical activity, heart rate data, and sleep monitoring statistics.
 
+# We are using Python for data cleaning, transformation and visualisation
+
 To facilitate the process of file access, we can create a path variable to store the directory path that holds all the CSV files.
 ```python
  df14 = pd.read_csv('dailyActivity_merged.csv') 
 ```
+# 🧰Process
+In this phase, our focus will be on data processing, which involves tasks such as cleaning and ensuring its accuracy, relevance, completeness, and freedom from errors and outliers. This will be achieved through the following steps:
+
+# Data Exploration and Observation: 
+We will carefully examine the dataset to gain a deeper understanding of its characteristics and content.
+
+# Identification and Handling of Missing or Null Values: 
+We will identify any missing or null values within the data and take appropriate measures to address them.
+
+# Data Transformation: 
+To ensure consistency, we will consider data type formatting and make any necessary adjustments.
+
+# Preliminary Statistical Analysis: 
+We will conduct an initial round of statistical analysis to uncover key insights and trends within the data.
+
+The objective of these processes is to prepare the data for further analysis and ensure its quality and integrity.
+```python
+# import packages and alias
+import numpy as np # data arrays
+import pandas as pd # data structure and data analysis
+import matplotlib as plt # data visualization
+import datetime as dt # date time
+```
+```python
+# importing dataframe 
+df14 = pd.read_csv('dailyActivity_merged.csv')
+```
+# Data cleaning & manipulation
+```python
+# review first 20 rows to get an idea about columns and data
+df14.head(20)
+```
+```python
+# getting more info of data in detail 
+df14.info
+```
+```python
+# to check the number of rows and columns 
+df14.shape
+```
+```python
+df14.size
+```
+```python
+#  resetting the index of the DataFrame while dropping the previous index
+df14.reset_index(drop=True, inplace=True)
+```
+```python
+df14.head(5)
+```
+```python
+# rename the dataframe
+daily_activity = df14
+```
+```python
+daily_activity.head(5)
+```
+```python
+# counting the missing values in dataframe
+count_missing_values = daily_activity.isnull().sum()
+```
+```python
+count_missing_values[:]
+```
+```python
+daily_activity.info()        # ActivityDate column is object dtype
+```
+```python
+# converting ActivityDate object type to datetime type
+daily_activity["ActivityDate"] = pd.to_datetime(df14["ActivityDate"])
+```
+```python
+daily_activity.info()
+```
+```python
+print(daily_activity["ActivityDate"].dtype)
+```
+```python
+# Converting format of ActivityDate to yyyy-mm-dd
+daily_activity["ActivityDate"] = daily_activity["ActivityDate"].dt.strftime("%Y-%m-%d")
+```
+```python
+print(daily_activity["ActivityDate"])
+```
+```python
+# creating new list of columns to rearrange the columns
+new_columns = ['Id', 'ActivityDate', 'DayOfTheWeek', 'TotalSteps', 'TotalDistance', 'TrackerDistance', 'LoggedActivitiesDistance', 'VeryActiveDistance', 'ModeratelyActiveDistance', 'LightActiveDistance', 'SedentaryActiveDistance', 'VeryActiveMinutes', 'FairlyActiveMinutes', 'LightlyActiveMinutes', 'SedentaryMinutes', 'TotalExerciseMinutes', 'TotalExerciseHours', 'Calories']
+
+# reindex function to rearrange columns based on "new_columns"
+daily_activity = df14.reindex(columns=new_columns)
+```
+```python
+# Creating new column by separating the date into day of the week for further analysis
+daily_activity['DayOfTheWeek'] = daily_activity['ActivityDate'].dt.day_name()
+```
+```python
+# to check the new added column
+print(daily_activity)
+```
+```python
+daily_activity["DayOfTheWeek"].head(5)
+```
+```python
+# creating new column total_mins by adding all minutes of all catagaries
+daily_activity["total_mins"] = daily_activity["VeryActiveMinutes"] + daily_activity["FairlyActiveMinutes"] + daily_activity["LightlyActiveMinutes"] + daily_activity["SedentaryMinutes"]
+daily_activity["total_mins"].head(5)
+```
+```python
+# creting a new column total_hours by converting total minutes into hours
+daily_activity["total_hours"] = round(daily_activity["total_mins"] / 60)
+```
+```python
+daily_activity["total_hours"].head(5)
+```
+# STEP 4: Data Analysis
+
+Executing Computations
+Retrieving Statistical Metrics for Analysis:
+
+Count: The number of rows.
+Mean (Average)
+Standard Deviation (Std)
+Minimum (Min) and Maximum (Max) values
+Percentiles at 25%, 50%, and 75%
+```python
+daily_activity.describe()
+```
+```python
+# check the names of all columns
+daily_activity.columns
+```
+```python
+# rename the columns 
+daily_activity.rename(columns = {"Id":"id", "ActivityDate":"date", "DayOfTheWeek":"day_week", "TotalSteps":"total_steps", "TotalDistance":"total_dist", "TrackerDistance":"track_dist", "LoggedActivitiesDistance":"logged_dist", "VeryActiveDistance":"very_active_dist", "ModeratelyActiveDistance":"moderate_active_dist", "LightActiveDistance":"light_active_dist", "SedentaryActiveDistance":"sedentary_active_dist", "VeryActiveMinutes":"very_active_mins", "FairlyActiveMinutes":"fairly_active_mins", "LightlyActiveMinutes":"lightly_active_mins", "SedentaryMinutes":"sedentary_mins", "TotalExerciseMinutes":"total_mins","TotalExerciseHours":"total_hours","Calories":"calories"}, inplace = True)
+```
+```python
+daily_activity.columns
+```
+# STEP 5: SHARE
+In this step, we are creating visualizations and communicating our findings based on our analysis.
+
+```python
+import matplotlib.pyplot as plt
+
+# Data
+days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+frequency = [10, 15, 8, 12, 20, 18, 14]
+
+# Create a bar plot
+plt.figure(figsize=(8, 6))
+plt.bar(days_of_week, frequency, color="green", edgecolor="black")
+
+# Adding annotations and visuals
+plt.xlabel("Day of the week")
+plt.ylabel("Frequency")
+plt.title("No. of times users logged in app across the week")
+
+# Display the plot
+plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+```
+
+
+
+
+
 
 
