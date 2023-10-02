@@ -239,6 +239,82 @@ plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.show()
 ```
+```python
+plt.figure(figsize=(8, 6))
+plt.hist(daily_activity['very_active_mins'], bins=20, color='skyblue', edgecolor='black')
+plt.xlabel('Very Active Minutes')
+plt.ylabel('Frequency')
+plt.title('Distribution of Very Active Minutes')
+plt.grid(True)
+plt.show()
+```
+```python
+plt.figure(figsize=(8, 6))
+plt.hist(daily_activity['fairly_active_mins'], bins=20, color='skyblue', edgecolor='black')
+plt.xlabel('Fairly Active Minutes')
+plt.ylabel('Frequency')
+plt.title('Distribution of Very Fairly Minutes')
+plt.grid(True)
+plt.show()
+```
+```python
+plt.figure(figsize=(8, 6))
+plt.hist(daily_activity['lightly_active_mins'], bins=20, color='skyblue', edgecolor='black')
+plt.xlabel('Lightly Active Minutes')
+plt.ylabel('Frequency')
+plt.title('Distribution of Lightly Active Minutes')
+plt.grid(True)
+plt.show()
+```
+```python
+plt.figure(figsize=(8, 6))
+plt.scatter(daily_activity['total_steps'], daily_activity['calories'], alpha=0.6, c='blue', edgecolor='black')
+plt.xlabel('Total Steps')
+plt.ylabel('Calories Burned')
+plt.title('Steps vs. Calories Burned')
+plt.grid(True)
+plt.show()
+```
+```python
+day_of_week_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+plt.figure(figsize=(10, 6))
+sns.barplot(x='day_week', y='total_steps', data=daily_activity, order=day_of_week_order)
+plt.xlabel('Day of the Week')
+plt.ylabel('Average Steps')
+plt.title('Average Steps by Day of the Week')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.show()
+```
+```python
+# pltting pie chart
+activity_labels = ['Very Active', 'Moderately Active', 'Lightly Active', 'Sedentary']
+activity_sums = [daily_activity['very_active_mins'].sum(), daily_activity['fairly_active_mins'].sum(),
+                 daily_activity['lightly_active_mins'].sum(), daily_activity['sedentary_mins'].sum()]
+plt.figure(figsize=(8, 8))
+plt.pie(activity_sums, labels=activity_labels, autopct='%1.1f%%', startangle=140)
+plt.title('Total Activity Summary')
+plt.show()
+```
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns  # Import Seaborn
+import numpy as np
+
+
+fig, axes = plt.subplots(1, 4, figsize=(15, 5), sharey=True)
+fig.suptitle('Distance per Minutes of Activity')
+
+sns.regplot(data = daily_activity, x = 'very_active_mins', y = 'very_active_dist', ax=axes[0])
+axes[0].set_xlim([0,500])
+sns.regplot(data = daily_activity, x = 'fairly_active_mins', y = 'moderate_active_dist', ax=axes[1])
+axes[1].set_xlim([0,500])
+sns.regplot(data = daily_activity, x = 'lightly_active_mins', y = 'light_active_dist', ax=axes[2])
+axes[2].set_xlim([0,500])
+sns.regplot(data = daily_activity, x = 'sedentary_mins', y = 'sedentary_active_dist', ax=axes[3])
+axes[3].set_xlim([0,500]);
+```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/3dcde150-a869-471b-b443-687a79334a1c)
+
 
 
 
