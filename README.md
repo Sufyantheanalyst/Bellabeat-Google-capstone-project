@@ -397,6 +397,22 @@ axes[3].set_xlim([0,500]);
 ![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/3dcde150-a869-471b-b443-687a79334a1c)
 As anticipated, VeryActive distances are covered in shorter durations, as indicated by their steeper regression lines, signifying higher speeds. FairlyActiveMinutes and LightlyActiveMinutes also exhibit variations in speed. It would be intriguing to gain insight into the criteria used for this categorization to better discern the distinctions between "Light" and "Moderate" activities.
 
+# STEP 6: Act
+
+In the final stage, we will present our findings and offer recommendations based on our analysis. During this phase, we will revisit our initial business inquiries and share high-level business suggestions.
+
+Identification of Trends:
+The majority of users (81.3%) primarily employ the FitBit app for monitoring sedentary activities, with a relatively limited focus on health habit tracking.
+Users exhibit a preference for tracking their activities during weekdays, potentially influenced by increased outdoor activities during this period compared to weekends.
+
+Application of These Trends to Bellabeat Customers:
+Both companies, Bellabeat and FitBit, share a common mission of empowering women with insights into their health, habits, and fitness data. These prevalent trends in the health and fitness domain can be directly applicable to Bellabeat's customer base.
+
+Utilizing These Trends for Bellabeat's Marketing Strategy:
+The Bellabeat marketing team can encourage users by providing valuable education and equipping them with information about the benefits of fitness. They can suggest various exercise routines, such as simple 10-minute workouts on weekdays and more intensive workouts on weekends. Additionally, offering information on calorie intake and expenditure within the Bellabeat app can further enhance user engagement.
+
+During weekends, the Bellabeat app can strategically send notifications to motivate users to engage in physical activities, fostering a healthier lifestyle.
+
 
 
 
