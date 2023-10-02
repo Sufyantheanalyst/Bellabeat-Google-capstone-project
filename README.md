@@ -104,21 +104,37 @@ import datetime as dt # date time
 df14 = pd.read_csv('dailyActivity_merged.csv')
 ```
 # Data cleaning & manipulation
+
+Gathering Fundamental Data Information:
+
+Total number of rows and columns.
+Names of the columns.
+Count of non-null values.
+Data types of the columns.
+
 ```python
 # review first 20 rows to get an idea about columns and data
 df14.head(20)
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/821e8aa4-21df-4ada-a782-030f7d3503bd)
+
 ```python
 # getting more info of data in detail 
 df14.info
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/fd40cc7b-de6f-490c-b5d8-d98fb924b60d)
+
 ```python
 # to check the number of rows and columns 
 df14.shape
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/be546289-233a-4ee4-878a-cec07864fed4)
+
 ```python
 df14.size
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/a4d9afd3-e6d0-44ae-820a-224c4e465c07)
+
 ```python
 #  resetting the index of the DataFrame while dropping the previous index
 df14.reset_index(drop=True, inplace=True)
@@ -133,6 +149,7 @@ daily_activity = df14
 ```python
 daily_activity.head(5)
 ```
+Next, I will determine if there are any null or missing values within the dataset.
 ```python
 # counting the missing values in dataframe
 count_missing_values = daily_activity.isnull().sum()
@@ -140,9 +157,22 @@ count_missing_values = daily_activity.isnull().sum()
 ```python
 count_missing_values[:]
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/2a5fc810-32d3-46b2-8767-1229ca02b50c)
+
 ```python
 daily_activity.info()        # ActivityDate column is object dtype
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/1c190dbe-9b52-494b-b248-484d285578e6)
+
+Now that we've identified the data requiring refinement, our next step is to engage in data manipulation and transformation. This will involve the following operations:
+
+Converting the "ActivityDate" to the "datetime64" data type.
+Formatting the "ActivityDate" to the "yyyy-mm-dd" format.
+Generating a new column named "DayOfTheWeek" by deriving the date as the corresponding day of the week for future analysis.
+Establishing a new column titled "TotalMins" by aggregating the values from "VeryActiveMinutes," "FairlyActiveMinutes," "LightlyActiveMinutes," and "SedentaryMinutes."
+Creating an additional column, "TotalHours," by converting the "TotalMins" column (mentioned in step 4) to hours.
+Reordering and renaming columns to enhance clarity and organization.
+To commence this process, we will initially convert the "ActivityDate" from an "object" data type to "datetime64," followed by the objective of formatting "ActivityDate" in the "yyyy-mm-dd" style.
 ```python
 # converting ActivityDate object type to datetime type
 daily_activity["ActivityDate"] = pd.to_datetime(df14["ActivityDate"])
@@ -150,9 +180,13 @@ daily_activity["ActivityDate"] = pd.to_datetime(df14["ActivityDate"])
 ```python
 daily_activity.info()
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/8964dcca-4407-4639-8b7d-00f467d07360)
+
 ```python
 print(daily_activity["ActivityDate"].dtype)
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/e59862a0-3530-4277-bc9d-16d6a5c06c62)
+
 ```python
 # Converting format of ActivityDate to yyyy-mm-dd
 daily_activity["ActivityDate"] = daily_activity["ActivityDate"].dt.strftime("%Y-%m-%d")
@@ -160,6 +194,8 @@ daily_activity["ActivityDate"] = daily_activity["ActivityDate"].dt.strftime("%Y-
 ```python
 print(daily_activity["ActivityDate"])
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/393cf264-1eea-483f-a44b-bad20d063a13)
+
 ```python
 # creating new list of columns to rearrange the columns
 new_columns = ['Id', 'ActivityDate', 'DayOfTheWeek', 'TotalSteps', 'TotalDistance', 'TrackerDistance', 'LoggedActivitiesDistance', 'VeryActiveDistance', 'ModeratelyActiveDistance', 'LightActiveDistance', 'SedentaryActiveDistance', 'VeryActiveMinutes', 'FairlyActiveMinutes', 'LightlyActiveMinutes', 'SedentaryMinutes', 'TotalExerciseMinutes', 'TotalExerciseHours', 'Calories']
@@ -167,6 +203,7 @@ new_columns = ['Id', 'ActivityDate', 'DayOfTheWeek', 'TotalSteps', 'TotalDistanc
 # reindex function to rearrange columns based on "new_columns"
 daily_activity = df14.reindex(columns=new_columns)
 ```
+Creating new column by separating the date into day of the week for further analysis.
 ```python
 # Creating new column by separating the date into day of the week for further analysis
 daily_activity['DayOfTheWeek'] = daily_activity['ActivityDate'].dt.day_name()
@@ -175,14 +212,21 @@ daily_activity['DayOfTheWeek'] = daily_activity['ActivityDate'].dt.day_name()
 # to check the new added column
 print(daily_activity)
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/73740e9e-b010-4c12-8131-8cf25e6cdf24)
+
 ```python
 daily_activity["DayOfTheWeek"].head(5)
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/5a0fe0ab-720f-4d9a-acb1-88896bca3618)
+
+Creating new column total_mins being the sum of total time logged.
 ```python
 # creating new column total_mins by adding all minutes of all catagaries
 daily_activity["total_mins"] = daily_activity["VeryActiveMinutes"] + daily_activity["FairlyActiveMinutes"] + daily_activity["LightlyActiveMinutes"] + daily_activity["SedentaryMinutes"]
 daily_activity["total_mins"].head(5)
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/f14f3dc8-d68a-4302-b4bc-47eecbe17a5a)
+
 ```python
 # creting a new column total_hours by converting total minutes into hours
 daily_activity["total_hours"] = round(daily_activity["total_mins"] / 60)
@@ -190,6 +234,8 @@ daily_activity["total_hours"] = round(daily_activity["total_mins"] / 60)
 ```python
 daily_activity["total_hours"].head(5)
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/da26bd23-9295-4b0a-92d7-42e9d8fb1bc7)
+
 # STEP 4: Data Analysis
 
 Executing Computations
@@ -203,10 +249,14 @@ Percentiles at 25%, 50%, and 75%
 ```python
 daily_activity.describe()
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/22a715ac-bedc-47e6-8100-53b075cc1cdf)
+
 ```python
 # check the names of all columns
 daily_activity.columns
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/9b59a804-999e-49c0-8056-d526f37be35e)
+
 ```python
 # rename the columns 
 daily_activity.rename(columns = {"Id":"id", "ActivityDate":"date", "DayOfTheWeek":"day_week", "TotalSteps":"total_steps", "TotalDistance":"total_dist", "TrackerDistance":"track_dist", "LoggedActivitiesDistance":"logged_dist", "VeryActiveDistance":"very_active_dist", "ModeratelyActiveDistance":"moderate_active_dist", "LightActiveDistance":"light_active_dist", "SedentaryActiveDistance":"sedentary_active_dist", "VeryActiveMinutes":"very_active_mins", "FairlyActiveMinutes":"fairly_active_mins", "LightlyActiveMinutes":"lightly_active_mins", "SedentaryMinutes":"sedentary_mins", "TotalExerciseMinutes":"total_mins","TotalExerciseHours":"total_hours","Calories":"calories"}, inplace = True)
@@ -214,6 +264,8 @@ daily_activity.rename(columns = {"Id":"id", "ActivityDate":"date", "DayOfTheWeek
 ```python
 daily_activity.columns
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/71c83ba7-c00e-48a4-af75-7d1fdb81b7e9)
+
 # STEP 5: SHARE
 In this step, we are creating visualizations and communicating our findings based on our analysis.
 
@@ -239,6 +291,13 @@ plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.show()
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/b0a2e361-5eb1-4428-85c5-18c8f3aa5ff1)
+Usage Frequency Throughout the Week
+
+Within this histogram, we examine the usage frequency of the FitBit app, categorized by days of the week.
+
+Our findings reveal that users tend to have a preference for or recollection of (with consideration for the possibility of occasional lapses) tracking their activity on the app primarily during the middle of the week, spanning from Tuesday through Friday. It is worth noting that usage frequency experiences a decline on Fridays and persists at lower levels over the weekend and on Mondays.
+
 ```python
 plt.figure(figsize=(8, 6))
 plt.hist(daily_activity['very_active_mins'], bins=20, color='skyblue', edgecolor='black')
@@ -248,6 +307,8 @@ plt.title('Distribution of Very Active Minutes')
 plt.grid(True)
 plt.show()
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/1d7636b9-f0b4-4d05-96bf-7492d277f726)
+
 ```python
 plt.figure(figsize=(8, 6))
 plt.hist(daily_activity['fairly_active_mins'], bins=20, color='skyblue', edgecolor='black')
@@ -257,6 +318,8 @@ plt.title('Distribution of Very Fairly Minutes')
 plt.grid(True)
 plt.show()
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/a83e6150-06c8-4d05-abb7-488262b25e6d)
+
 ```python
 plt.figure(figsize=(8, 6))
 plt.hist(daily_activity['lightly_active_mins'], bins=20, color='skyblue', edgecolor='black')
@@ -266,6 +329,11 @@ plt.title('Distribution of Lightly Active Minutes')
 plt.grid(True)
 plt.show()
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/d878073b-f294-4d89-97e8-6e727d86eb3f)
+These plots reveal that a significant number of users, exceeding 400 individuals, allocate minimal time to being Very or Fairly Active. In contrast, the distribution of LightlyActiveMinutes displays a noteworthy degree of symmetry, with the exception of instances of exceptionally low minute counts.
+
+Nevertheless, an issue warrants consideration: it remains uncertain whether all users consistently utilized the tracker throughout the entire day within the analyzed timeframe. In the event that a user records data for the entire day, the sum of VeryActiveMinutes, FairlyActiveMinutes, LightlyActiveMinutes, and SedentaryMinutes should equate to 1440, representing the total number of minutes in a day.
+
 ```python
 plt.figure(figsize=(8, 6))
 plt.scatter(daily_activity['total_steps'], daily_activity['calories'], alpha=0.6, c='blue', edgecolor='black')
@@ -275,6 +343,8 @@ plt.title('Steps vs. Calories Burned')
 plt.grid(True)
 plt.show()
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/1927371a-cc96-4fc0-b691-d7745e7c78e1)
+
 ```python
 day_of_week_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 plt.figure(figsize=(10, 6))
@@ -285,6 +355,8 @@ plt.title('Average Steps by Day of the Week')
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.show()
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/15544afd-5739-4cd9-bec9-9a1b93d5233b)
+
 ```python
 # pltting pie chart
 activity_labels = ['Very Active', 'Moderately Active', 'Lightly Active', 'Sedentary']
@@ -295,6 +367,15 @@ plt.pie(activity_sums, labels=activity_labels, autopct='%1.1f%%', startangle=140
 plt.title('Total Activity Summary')
 plt.show()
 ```
+![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/2f7ffbd0-1f1d-4540-9f32-a89bfba0d2c7)
+Percentage Breakdown of Activity Duration
+
+As illustrated in the pie chart,
+
+The largest portion, accounting for 81.3%, is attributed to Sedentary minutes. This suggests that users primarily utilize the FitBit app for recording daily activities such as commuting, sedentary movements (shifting from one location to another), or completing routine errands.
+
+The usage of the app for tracking fitness activities (e.g., running) is infrequent, as evidenced by the minimal percentages for fairly active activity (1.1%) and very active activity (1.7%). This observation is somewhat disheartening considering that the FitBit app was originally designed to promote physical fitness.
+
 ```python
 import matplotlib.pyplot as plt
 import seaborn as sns  # Import Seaborn
@@ -314,6 +395,7 @@ sns.regplot(data = daily_activity, x = 'sedentary_mins', y = 'sedentary_active_d
 axes[3].set_xlim([0,500]);
 ```
 ![image](https://github.com/Sufyantheanalyst/Bellabeat-Google-capstone-project/assets/129004768/3dcde150-a869-471b-b443-687a79334a1c)
+As anticipated, VeryActive distances are covered in shorter durations, as indicated by their steeper regression lines, signifying higher speeds. FairlyActiveMinutes and LightlyActiveMinutes also exhibit variations in speed. It would be intriguing to gain insight into the criteria used for this categorization to better discern the distinctions between "Light" and "Moderate" activities.
 
 
 
